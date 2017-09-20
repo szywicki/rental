@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Welcome to your New HOME!</title>
+</head>
+<body>
+<a href="/apartments/new">List a new apartment!</a>
+ #if( $noUser )
+<a href="/login">Login</a>
+
+<a href="/signup">Sign Up!</a>
+ #end
+ 
+#if( $currentUser )
+	Welcome, $currentUser.email 
+	<br>
+	<a href="/logout">Logout</a>
+	<br>
+#end
+
+	<h1>Apartments!</h1>
+	#foreach( $apartment in $apartments )
+	  <div>
+	  	<a href="/apartments/$apartment.id">$apartment.address</a>
+	  </div>
+	#end
+</body>
+</html>
