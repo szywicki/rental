@@ -1,0 +1,18 @@
+
+
+<div>
+  {{#currentUser}}
+    <form action="/logout" method="post">
+      Hello, {{ currentUser.firstName }}
+      <button>Logout</button>
+      <input type="hidden" name="{{ _csrf.parameterName }}" value="{{ _csrf.token }}">
+    </form>
+    <a href="/apartments/mine">Your listings</a>
+    <br>
+    <a href="/apartments/new">Add a listing</a>
+  {{/currentUser}}
+  {{#noUser}}
+    <a href="/login">Login</a>
+    <a href="/signup">Sign up</a>
+  {{/noUser}}
+</div>

@@ -1,6 +1,7 @@
 package com.libertymutual.goforcode.spark.app.controllers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -44,8 +45,22 @@ public class ApartmentController {
 				req.queryParams("zipCode")
 		);
 			apartment.saveIt();
+			User user = req.session().attribute("currentUser");
+			user.add(apartment);
 			res.redirect("/");
 			return "";
+		}
+	};
+	public static final Route index = (Request req, Response res) -> {
+		User currentUser = req.session().attribute("currentUser");
+		Long id = (long)currentUser.getId();
+		
+		try (AutoCloseableDb db = new AutoCloseableDb()) {
+			List<Apartment> apartments = currentUser.getAll(Apartment.class);
+			Map<String, Object> model = new HashMap<String, Object>();
+			model.put("currentUser", req.session().attribute("currentUser"));
+			model.put("apartments", apartments);
+			return MustacheRenderer.getInstance().render("apartment/index.html", model);
 		}
 	};
 }

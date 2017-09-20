@@ -34,17 +34,29 @@ public class Application {
 		
 		try (AutoCloseableDb db = new AutoCloseableDb()){
 		User.deleteAll();
-		new User("curtis.schlak@theironyard.com", encryptedPassword, "Curtis", "Schlak").saveIt();
+		User curtis = new User("curtis.schlak@theironyard.com", encryptedPassword, "Curtis", "Schlak");
+		curtis.saveIt();
 		
 		Apartment.deleteAll();
-		new Apartment(6200, 1, 4.0, 350, "123 Main St", "San Francisco", "CA", "95125").saveIt();
-		new Apartment(1459, 5, 6, 4000, "123 Cowboy Way", "Houston", "TX", "77006").saveIt();
-		new Apartment(600, 3, 2, 1500, "123 Suburb Way", "Wausasu", "WI", "54401").saveIt();
+		Apartment a =new Apartment(6200, 1, 4.0, 350, "123 Main St", "San Francisco", "CA", "95125");
+		a.saveIt();
+		curtis.add(a);
+		
+		Apartment b =new Apartment(1459, 5, 6, 4000, "123 Cowboy Way", "Houston", "TX", "77006");
+		b.saveIt();
+		curtis.add(b);
+		
+		Apartment c =new Apartment(600, 3, 2, 1500, "123 Suburb Way", "Wausasu", "WI", "54401");
+		c.saveIt();
+		curtis.add(c);
 		}
 		
 		path("/apartments", () -> {
 			before("/new",  SecurityFilters.isAuthenticated);
 			get("/new",  ApartmentController.newForm);
+			
+			before("/mine",  SecurityFilters.isAuthenticated);
+			get("/mine", ApartmentController.index);
 			get("/:id",  ApartmentController.details); 
 			
 			before("",  SecurityFilters.isAuthenticated);
@@ -55,6 +67,7 @@ public class Application {
 		get("/login", 		   SessionController.newForm);
 		post("/login",         SessionController.create);
 		get("/logout", 		   SessionController.destroy);
+		post("/logout",         SessionController.destroy);
 		post("/signup",        UserController.create);
 		get("/signup",         UserController.newForm);
 		

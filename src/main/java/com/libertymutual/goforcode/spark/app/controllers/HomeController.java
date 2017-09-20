@@ -23,10 +23,10 @@ public class HomeController {
 		model.put("apartments", apartments);
 		model.put("currentUser", req.session().attribute("currentUser"));
 		model.put("noUser", req.session().attribute("currentUser")== null);
-		return new VelocityTemplateEngine().render(
-				new ModelAndView(model, "templates/home/indexVelocity.html"));
-		}
-//		return MustacheRenderer.getInstance().render("home/index.html", model);
+//		return new VelocityTemplateEngine().render(
+//				new ModelAndView(model, "templates/home/indexVelocity.html"));
+//		}
+		return MustacheRenderer.getInstance().render("home/Index.html", model);
+	}
 	};
-	
 }

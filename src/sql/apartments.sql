@@ -8,6 +8,8 @@ CREATE TABLE apartments (
   square_footage INTEGER NOT NULL,
   address VARCHAR(255) NOT NULL,
   city VARCHAR(255) NOT NULL,
-  state VARCHAR(255) NOT NULL,
-  zip_code VARCHAR(30) NOT NULL
+  state VARCHAR(20) NOT NULL,
+  zip_code VARCHAR(10) NOT NULL,
+  user_id BIGINT not null,
+  is_active boolean note null default false
 );
