@@ -23,22 +23,22 @@ public class SessionController {
 		model.put("noUser", req.session().attribute("currentUser") == null);
 		return MustacheRenderer.getInstance().render("session/newForm.html", model);
 	};
-	
+
 	public static Route create = (Request req, Response res) -> {
 		String email = req.queryParams("email");
 		String password = req.queryParams("password");
-		
+
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
-		User user = User.findFirst("email = ?", email);
-		if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-			req.session().attribute("currentUser", user);
+			User user = User.findFirst("email = ?", email);
+			if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+				req.session().attribute("currentUser", user);
 			}
 		}
 		res.redirect(req.queryParamOrDefault("returnPath", "/"));
 		return "";
 	};
 
-	public static final Route destroy = (Request req , Response res) -> {
+	public static final Route destroy = (Request req, Response res) -> {
 		req.session().attribute("currentUser", null);
 		res.redirect("/");
 		return "";

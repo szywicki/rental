@@ -31,13 +31,13 @@ public class ApartmentController {
 			User currentUser = req.session().attribute("currentUser");
 			List<Apartment> apartments = ApartmentsUsers.where("apartment_id = ?", id);
 			User owner = apartment.parent(User.class);
-						
+
 			if (currentUser != null) {
 				List<User> likers = apartment.get(User.class, "user_id = ?", currentUser.getId());
 				if (currentUser.getId().equals(owner.getId())) {
 					currentUserIsLister = true;
 				}
-				if(likers.size()==0) {
+				if (likers.size() == 0) {
 					currentUserIsLiker = false;
 				} else {
 					currentUserIsLiker = true;
@@ -65,14 +65,13 @@ public class ApartmentController {
 	};
 
 	public static final Route create = (Request req, Response res) -> {
-		Apartment apartment = new Apartment(
-				Integer.parseInt(req.queryParams("rent")),
+		Apartment apartment = new Apartment(Integer.parseInt(req.queryParams("rent")),
 				Integer.parseInt(req.queryParams("number_of_bedrooms")),
 				Double.parseDouble(req.queryParams("number_of_bathrooms")),
 				Integer.parseInt(req.queryParams("square_footage")), req.queryParams("address"),
 				req.queryParams("city"), req.queryParams("state"), req.queryParams("zip_code"),
 				Integer.parseInt(req.queryParams("number_of_likes")), Boolean.parseBoolean("is_Active"));
-		
+
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 			User currentUser = req.session().attribute("currentUser");
 			apartment.set("is_Active", true);
@@ -87,11 +86,10 @@ public class ApartmentController {
 		User currentUser = req.session().attribute("currentUser");
 		Long id = (long) currentUser.getId();
 
-
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 			List<Apartment> activeApartments = Apartment.where("is_active = ? and user_id = ?", true, id);
 			List<Apartment> apartmentIsInactive = Apartment.where("is_active = ? and user_id =?", false, id);
-	
+
 			Map<String, Object> model = new HashMap<String, Object>();
 			model.put("currentUser", req.session().attribute("currentUser"));
 			model.put("activeApartments", activeApartments);
@@ -99,11 +97,11 @@ public class ApartmentController {
 			return MustacheRenderer.getInstance().render("apartment/index.html", model);
 		}
 	};
-	
+
 	public static final Route likes = (Request req, Response res) -> {
 		String idAsString = req.params("id");
 		int id = Integer.parseInt(idAsString);
-		
+
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 			Apartment apartment = Apartment.findById(id);
 			User currentUser = req.session().attribute("currentUser");
@@ -112,11 +110,11 @@ public class ApartmentController {
 			return "";
 		}
 	};
-	
+
 	public static final Route activate = (Request req, Response res) -> {
 		String idAsString = req.params("id");
 		int id = Integer.parseInt(idAsString);
-		
+
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 			Apartment apartment = Apartment.findById(id);
 			User currentUser = req.session().attribute("currentUser");
@@ -126,11 +124,11 @@ public class ApartmentController {
 			return "";
 		}
 	};
-	
+
 	public static final Route deactivate = (Request req, Response res) -> {
 		String idAsString = req.params("id");
 		int id = Integer.parseInt(idAsString);
-		
+
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 			Apartment apartment = Apartment.findById(id);
 			User currentUser = req.session().attribute("currentUser");
