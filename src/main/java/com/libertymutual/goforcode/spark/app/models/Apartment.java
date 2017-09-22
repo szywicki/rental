@@ -11,7 +11,7 @@ public class Apartment extends Model{
 	public Apartment() {}
 	
 	public Apartment(int rent, int numberOfBedrooms, double numberOfBathrooms, int squareFootage, String address, String city,
-			String state, String zipCode) {
+			String state, String zipCode, int numberOfLikes, boolean isActive) {
 		
 		setRent(rent);
 		setNumberOfBedrooms(numberOfBedrooms);
@@ -21,9 +21,29 @@ public class Apartment extends Model{
 		setCity(city);
 		setState(state);
 		setZipCode(zipCode);
+		setNumberOfLikes(numberOfLikes);
+		setIsActive(isActive);
 	}
 	
 	
+	public void setIsActive(boolean isActive) {
+		set("is_active", isActive);
+		
+	}
+	
+	public boolean getIsActive() {
+		return getBoolean("is_active");
+	}
+
+	public void setNumberOfLikes(int numberOfLikes) {
+		set("number_of_likes", numberOfLikes);
+		
+	}
+	
+	public int getNumberOfLikes() {
+		return getInteger("number_of_likes");
+	}
+
 	public int getNumberOfBedrooms() {
 		return getInteger("number_of_bedrooms");
 	}
@@ -91,6 +111,10 @@ public class Apartment extends Model{
 
 	public void setNumberOfBedrooms(int numberOfBedrooms) {
 		set("number_of_bedrooms", numberOfBedrooms);
+	}
+	
+	public int getUser_Id() {
+		return getInteger("user_id");
 	}
 
 }

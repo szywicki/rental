@@ -10,6 +10,7 @@ CREATE TABLE apartments (
   city VARCHAR(255) NOT NULL,
   state VARCHAR(20) NOT NULL,
   zip_code VARCHAR(10) NOT NULL,
-  user_id BIGINT not null,
-  is_active boolean note null default false
+  user_id BIGINT,
+  is_active boolean not null default false,
+  number_of_likes INTEGER
 );

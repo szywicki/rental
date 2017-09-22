@@ -7,21 +7,22 @@
 <body>
 {{>/common/navigation}}
 
-	{{#currentUser}}
-	These are the listings for: {{ currentUser.email }}
-	{{/currentUser}}
-
 
 	<h1>Your Listings</h1>
-	
+
 	<h2>Active Listings</h2>
-	{{#apartments}}
+	{{#activeApartments}}
 	  <div>
 	  	<a href="/apartments/{{ id }}">{{ address }}</a>
 	  </div>
-	{{/apartments}}
+	{{/activeApartments}}
 	
 	<h2>Inactive Listings</h2>
+	{{#apartmentIsInactive}}
+	<div>
+	  	<a href="/apartments/{{ id }}">{{ address }}</a>
+	  </div>
+	{{/apartmentIsInactive}}
 
 </body>
 </html>

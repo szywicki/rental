@@ -7,11 +7,14 @@
 <body>
 {{>/common/navigation}}
 
-	<h1>Apartments!</h1>
-	{{#apartments}}
+<h1>Apartments!</h1>
+
+<h2>Active Listings</h2>
+{{#activeApartments}}
 	  <div>
 	  	<a href="/apartments/{{ id }}">{{ address }}</a>
 	  </div>
-	{{/apartments}}
+{{/activeApartments}}
+
 </body>
 </html>

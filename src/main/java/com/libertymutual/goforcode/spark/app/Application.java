@@ -30,25 +30,28 @@ public class Application {
 	
 	public static void main(String[] args) {	
 		
-		String encryptedPassword = BCrypt.hashpw("password", BCrypt.gensalt());
+		String encryptedPassword = BCrypt.hashpw("pw", BCrypt.gensalt());
 		
 		try (AutoCloseableDb db = new AutoCloseableDb()){
 		User.deleteAll();
-		User curtis = new User("curtis.schlak@theironyard.com", encryptedPassword, "Curtis", "Schlak");
+		User curtis = new User("s@z", encryptedPassword, "s", "z");
 		curtis.saveIt();
 		
 		Apartment.deleteAll();
-		Apartment a =new Apartment(6200, 1, 4.0, 350, "123 Main St", "San Francisco", "CA", "95125");
-		a.saveIt();
+		Apartment a =new Apartment(6200, 1, 4.0, 350, "123 Main St", "San Francisco", "CA", "95125", 0, true);
 		curtis.add(a);
+		a.saveIt();
 		
-		Apartment b =new Apartment(1459, 5, 6, 4000, "123 Cowboy Way", "Houston", "TX", "77006");
-		b.saveIt();
+		
+		Apartment b =new Apartment(1459, 5, 6, 4000, "123 Cowboy Way", "Houston", "TX", "77006", 1, true);
 		curtis.add(b);
+		b.saveIt();
 		
-		Apartment c =new Apartment(600, 3, 2, 1500, "123 Suburb Way", "Wausasu", "WI", "54401");
-		c.saveIt();
+		
+		Apartment c =new Apartment(600, 3, 2, 1500, "123 Suburb Way", "Wausasu", "WI", "54401", 0, false);
 		curtis.add(c);
+		c.saveIt();
+		
 		}
 		
 		path("/apartments", () -> {
@@ -61,6 +64,15 @@ public class Application {
 			
 			before("",  SecurityFilters.isAuthenticated);
 			post("",     ApartmentController.create);
+			
+			before("/:id/like",   SecurityFilters.isAuthenticated);
+			post("/:id/like", ApartmentController.likes);
+			
+			before("/:id/activations", SecurityFilters.isAuthenticated);
+			post("/:id/activations", ApartmentController.activate);
+			
+			before("/:id/deactivations", SecurityFilters.isAuthenticated);
+			post("/:id/deactivations", ApartmentController.deactivate);
 		});
 		
 		get("/", 			   HomeController.index);
@@ -68,8 +80,8 @@ public class Application {
 		post("/login",         SessionController.create);
 		get("/logout", 		   SessionController.destroy);
 		post("/logout",         SessionController.destroy);
-		post("/signup",        UserController.create);
-		get("/signup",         UserController.newForm);
+		post("/users",        UserController.create);
+		get("/users/new",         UserController.newForm);
 		
 		path("/api", () -> {
 			get ("/apartments/:id", ApartmentApiController.details); 

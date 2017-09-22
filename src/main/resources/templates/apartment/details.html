@@ -2,12 +2,27 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Your next home!</title>
+<title>{{ apartment.address }}</title>
 </head>
 <body>
 {{>/common/navigation}}
+<br>
 
+{{#currentUser}}
+	{{#notOwner}}
+	{{#notLiker}}
+	<form method="post" action="/apartments/{{apartment.id}}/like">
+	<button>Like this apartment</button>
+	</form>
+	{{/notLiker}}
+	{{/notOwner}}
+{{/currentUser}}
 	<h1>Only ${{ apartment.rent }}</h1>
+	
+	
+	
+<h2>Number of Likes {{noOfLikes}}</h2>
+
 <p>
   {{ apartment.address }}<br>
   {{ apartment.city }}, {{ apartment.state }} {{ apartment.zipCode }}
@@ -20,6 +35,30 @@
   <dt>Square footage</dt>
   <dd>{{ apartment.squareFootage }}</dd>
 </dl>
+{{#noUser}}
+{{#notLiker}}
+<a href="/login?returnPath=/apartments/{{apartment.id}}">Login to LIKE this apartment</a>
+{{/notLiker}}
+{{/noUser}}
 
+{{#currentUser}}
+
+
+{{#owner}}
+	{{#apartmentIsActive}}
+	<form method="post" action="/apartments/{{apartment.id}}/deactivations">
+	<button>Deactivate listing</button>
+	</form>
+	{{/apartmentIsActive}}
+	
+	{{#apartmentIsInactive}}
+	<form method="post" action="/apartments/{{apartment.id}}/activations">
+	<button>Activate listing</button>
+	</form>
+	{{/apartmentIsInactive}}
+	
+{{/owner}}
+
+{{/currentUser}}
 </body>
 </html>

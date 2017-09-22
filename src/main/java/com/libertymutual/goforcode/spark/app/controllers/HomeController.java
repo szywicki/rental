@@ -19,13 +19,13 @@ public class HomeController {
 	public static final Route index = (Request req, Response res) -> {
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 		List<Apartment> apartments = Apartment.findAll();
+		List<Apartment> activeApartments = Apartment.where("is_active = ?", true);
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("apartments", apartments);
+		model.put("activeApartments", activeApartments);
 		model.put("currentUser", req.session().attribute("currentUser"));
 		model.put("noUser", req.session().attribute("currentUser")== null);
-//		return new VelocityTemplateEngine().render(
-//				new ModelAndView(model, "templates/home/indexVelocity.html"));
-//		}
+
 		return MustacheRenderer.getInstance().render("home/Index.html", model);
 	}
 	};
