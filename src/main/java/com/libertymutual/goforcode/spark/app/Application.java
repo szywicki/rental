@@ -14,6 +14,7 @@ import com.github.mustachejava.Mustache;
 import com.libertymutual.goforcode.spark.app.controllers.ApartmentApiController;
 import com.libertymutual.goforcode.spark.app.controllers.ApartmentController;
 import com.libertymutual.goforcode.spark.app.controllers.HomeController;
+import com.libertymutual.goforcode.spark.app.controllers.SessionApiController;
 import com.libertymutual.goforcode.spark.app.controllers.SessionController;
 import com.libertymutual.goforcode.spark.app.controllers.UserApiController;
 import com.libertymutual.goforcode.spark.app.controllers.UserController;
@@ -54,6 +55,8 @@ public class Application {
 		
 		}
 		
+		enableCORS("http://localhost:4200", "*", "*");
+		
 		path("/apartments", () -> {
 			before("/new",  SecurityFilters.isAuthenticated);
 			get("/new",  ApartmentController.newForm);
@@ -84,10 +87,41 @@ public class Application {
 		get("/users/new",         UserController.newForm);
 		
 		path("/api", () -> {
+			get ("/apartments/mine", ApartmentApiController.mine);
 			get ("/apartments/:id", ApartmentApiController.details); 
+			get ("/apartments", ApartmentApiController.index);
 			post ("/apartments", ApartmentApiController.create);
+			
+			post("/sessions", SessionApiController.create);
+			delete("/sessions/mine", SessionApiController.destroy);
 		});
 		
+	}
+	
+	private static void enableCORS(final String origin, final String methods, final String headers) {
+
+	    options("/*", (request, response) -> {
+
+	        String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+	        if (accessControlRequestHeaders != null) {
+	            response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+	        }
+
+	        String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+	        if (accessControlRequestMethod != null) {
+	            response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+	        }
+
+	        return "OK";
+	    });
+
+	    before((request, response) -> {
+	        response.header("Access-Control-Allow-Origin", origin);
+	        response.header("Access-Control-Request-Method", methods);
+	        response.header("Access-Control-Allow-Headers", headers);
+	        response.header("Access-Control-Allow-Credentials", "true");
+	        // Note: this may or may not be necessary in your particular application
+	    });
 	}
 	
 }
