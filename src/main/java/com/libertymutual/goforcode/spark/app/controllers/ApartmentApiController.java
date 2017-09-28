@@ -4,6 +4,7 @@ import org.javalite.activejdbc.LazyList;
 import org.javalite.common.JsonHelper;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 import static spark.Spark.notFound;
+import static spark.Spark.post;
 
 import java.util.Map;
 
@@ -48,16 +49,32 @@ public class ApartmentApiController {
 		}
 	};
 
-	public static Route create = (Request req, Response res) -> {
+	public static final Route create = (Request req, Response res) -> {
 		String json = req.body();
 		Map map = JsonHelper.toMap(json);
 		Apartment apartment = new Apartment();
 		apartment.fromMap(map);
-
+		
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
+			User currentUser = req.session().attribute("currentUser");
+			apartment.set("is_Active", true);
+			currentUser.add(apartment);
 			apartment.saveIt();
 			res.status(201);
 			return apartment.toJson(true);
 		}
 	};
+	
+	public static final Route deactivate = (Request req, Response res) -> {
+		String idAsString = req.params("id");
+		int id = Integer.parseInt(idAsString);
+
+		try (AutoCloseableDb db = new AutoCloseableDb()) {
+			Apartment apartment = Apartment.findById(id);
+			User currentUser = req.session().attribute("currentUser");
+			apartment.set("is_active", false);
+			apartment.saveIt();
+			return apartment.toJson(true);
+			}
+		};
 }

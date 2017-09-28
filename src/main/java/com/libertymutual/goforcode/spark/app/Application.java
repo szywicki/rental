@@ -75,7 +75,7 @@ public class Application {
 			post("/:id/activations", ApartmentController.activate);
 			
 			before("/:id/deactivations", SecurityFilters.isAuthenticated);
-			post("/:id/deactivations", ApartmentController.deactivate);
+//			post("/:id/deactivations", ApartmentController.deactivate);
 		});
 		
 		get("/", 			   HomeController.index);
@@ -88,9 +88,11 @@ public class Application {
 		
 		path("/api", () -> {
 			get ("/apartments/mine", ApartmentApiController.mine);
+			post ("/apartments/new", ApartmentApiController.create);
+			post ("/apartments/:id/deactivations", ApartmentApiController.deactivate);
 			get ("/apartments/:id", ApartmentApiController.details); 
 			get ("/apartments", ApartmentApiController.index);
-			post ("/apartments", ApartmentApiController.create);
+			
 			
 			post("/sessions", SessionApiController.create);
 			delete("/sessions/mine", SessionApiController.destroy);
