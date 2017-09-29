@@ -72,7 +72,7 @@ public class Application {
 			post("/:id/like", ApartmentController.likes);
 			
 			before("/:id/activations", SecurityFilters.isAuthenticated);
-			post("/:id/activations", ApartmentController.activate);
+//			post("/:id/activations", ApartmentController.activate);
 			
 			before("/:id/deactivations", SecurityFilters.isAuthenticated);
 //			post("/:id/deactivations", ApartmentController.deactivate);
@@ -90,6 +90,7 @@ public class Application {
 			get ("/apartments/mine", ApartmentApiController.mine);
 			post ("/apartments/new", ApartmentApiController.create);
 			post ("/apartments/:id/deactivations", ApartmentApiController.deactivate);
+			post("/apartments/:id/activations", ApartmentApiController.activate);
 			get ("/apartments/:id", ApartmentApiController.details); 
 			get ("/apartments", ApartmentApiController.index);
 			

@@ -54,7 +54,7 @@ public class ApartmentApiController {
 		Map map = JsonHelper.toMap(json);
 		Apartment apartment = new Apartment();
 		apartment.fromMap(map);
-		
+
 		try (AutoCloseableDb db = new AutoCloseableDb()) {
 			User currentUser = req.session().attribute("currentUser");
 			apartment.set("is_Active", true);
@@ -64,7 +64,7 @@ public class ApartmentApiController {
 			return apartment.toJson(true);
 		}
 	};
-	
+
 	public static final Route deactivate = (Request req, Response res) -> {
 		String idAsString = req.params("id");
 		int id = Integer.parseInt(idAsString);
@@ -75,6 +75,19 @@ public class ApartmentApiController {
 			apartment.set("is_active", false);
 			apartment.saveIt();
 			return apartment.toJson(true);
-			}
-		};
+		}
+	};
+
+	public static final Route activate = (Request req, Response res) -> {
+		String idAsString = req.params("id");
+		int id = Integer.parseInt(idAsString);
+
+		try (AutoCloseableDb db = new AutoCloseableDb()) {
+			Apartment apartment = Apartment.findById(id);
+			User currentUser = req.session().attribute("currentUser");
+			apartment.set("is_active", true);
+			apartment.saveIt();
+			return apartment.toJson(true);
+		}
+	};
 }
